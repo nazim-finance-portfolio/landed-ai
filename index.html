@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LandedAI - Your Personal Guide to Starting Life in Canada</title>
+    <meta name="description" content="LandedAI helps newcomers navigate their first 90 days in Canada. Get personalized checklists, AI-powered guidance, and step-by-step support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800&family=Satoshi:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A1628;
+            --accent: #00D4AA;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --white: #FFFFFF;
+            --gray-100: #F7F8FA;
+            --gray-200: #E8ECF2;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+            --gradient-start: #0A1628;
+            --gradient-end: #1a2942;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Satoshi', -apple-system, sans-serif;
+            background: var(--primary);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, var(--accent-glow), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 50%, rgba(0, 212, 170, 0.1), transparent),
+                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(0, 212, 170, 0.08), transparent);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 22, 40, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 0 80px;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            color: var(--accent);
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent), #00FFD1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            margin-bottom: 40px;
+            max-width: 500px;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Email Form */
+        .email-form {
+            display: flex;
+            gap: 12px;
+            animation: fadeInUp 0.6s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .email-input {
+            flex: 1;
+            max-width: 320px;
+            padding: 18px 24px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .submit-btn {
+            padding: 18px 32px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .form-note {
+            margin-top: 16px;
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            animation: fadeInUp 0.6s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent), #00FFD1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-user h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .card-user p {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .check-circle.done {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .check-circle.pending {
+            border: 2px solid var(--gray-400);
+            color: var(--gray-400);
+        }
+
+        .checklist-text {
+            flex: 1;
+        }
+
+        .checklist-text h4 {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .checklist-text p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .checklist-text.completed h4 {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 60px;
+            max-width: 600px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px 32px;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 170, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--gray-400);
+            line-height: 1.7;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 120px 0;
+            background: linear-gradient(180deg, transparent, rgba(0, 212, 170, 0.03), transparent);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -20px;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), #00FFD1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 auto 24px;
+        }
+
+        .step h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: var(--gray-400);
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 120px 0;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.15), rgba(0, 212, 170, 0.05));
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: 32px;
+            padding: 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 170, 0.1), transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            color: var(--gray-400);
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta .email-form {
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-top: 16px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .step::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .email-input {
+                max-width: 100%;
+            }
+
+            .cta-box {
+                padding: 48px 24px;
+            }
+
+            .nav-cta {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">🍁</div>
+                LandedAI
+            </a>
+            <a href="#signup" class="nav-cta">Get Early Access</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">Now accepting early signups</div>
+                <h1>Your first 90 days in Canada, <span>simplified.</span></h1>
+                <p class="hero-description">LandedAI is your personal AI guide that walks you through everything — SIN, health card, banking, housing, jobs — step by step, in your language.</p>
+                
+                <form class="email-form" id="heroForm">
+                    <input type="email" class="email-input" placeholder="Enter your email" required>
+                    <button type="submit" class="submit-btn">Join Waitlist</button>
+                </form>
+                <p class="form-note">🎉 Join 200+ newcomers already on the waitlist</p>
+                <div class="success-message" id="heroSuccess">
+                    ✓ You're on the list! We'll notify you when we launch.
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="card-header">
+                        <div class="card-avatar">👋</div>
+                        <div class="card-user">
+                            <h3>Welcome, Priya!</h3>
+                            <p>Day 5 in Canada • Ontario</p>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="check-circle done">✓</div>
+                        <div class="checklist-text completed">
+                            <h4>Apply for SIN Number</h4>
+                            <p>Service Canada • Completed</p>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="check-circle done">✓</div>
+                        <div class="checklist-text completed">
+                            <h4>Open Bank Account</h4>
+                            <p>TD Newcomer Account • $300 bonus</p>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="check-circle pending">3</div>
+                        <div class="checklist-text">
+                            <h4>Apply for Health Card</h4>
+                            <p>OHIP • Due in 2 days</p>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="check-circle pending">4</div>
+                        <div class="checklist-text">
+                            <h4>Get Phone Plan</h4>
+                            <p>Compare newcomer deals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <span class="section-label">Features</span>
+            <h2 class="section-title">Everything you need to settle in Canada, in one place.</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalized Checklist</h3>
+                    <p>Get a 90-day action plan customized to your province, visa type, and family situation. Never miss a critical deadline.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Assistant</h3>
+                    <p>Ask anything 24/7 — "How do I get OHIP?", "Best newcomer credit card?", "Documents for SIN?" — instant answers in plain language.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Smart Recommendations</h3>
+                    <p>We compare banks, phone plans, and services so you don't get ripped off. Exclusive newcomer deals included.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Multilingual Support</h3>
+                    <p>Get guidance in English, Hindi, Mandarin, Arabic, Tagalog, and more. Settling in Canada shouldn't require perfect English.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Credit Building</h3>
+                    <p>Learn how to build Canadian credit from zero. We guide you through secured cards, credit builders, and score tracking.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏠</div>
+                    <h3>Housing Help</h3>
+                    <p>Understand rental applications, tenant rights, and what landlords can legally ask. Avoid common newcomer mistakes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <span class="section-label">How It Works</span>
+            <h2 class="section-title">Start settling in 4 simple steps.</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Sign Up</h3>
+                    <p>Create your free account in 30 seconds</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Tell Us About You</h3>
+                    <p>Province, visa type, family — we customize everything</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Your Plan</h3>
+                    <p>Receive your personalized 90-day checklist</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Start Ticking Off</h3>
+                    <p>Complete tasks with AI guidance every step</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="signup">
+        <div class="container">
+            <div class="cta-box">
+                <div class="cta-content">
+                    <h2>Ready to make Canada feel like home?</h2>
+                    <p>Join the waitlist and be first to access LandedAI when we launch.</p>
+                    
+                    <form class="email-form" id="ctaForm">
+                        <input type="email" class="email-input" placeholder="Enter your email" required>
+                        <button type="submit" class="submit-btn">Join Waitlist</button>
+                    </form>
+                    <div class="success-message" id="ctaSuccess">
+                        ✓ You're on the list! We'll notify you when we launch.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 LandedAI. Built with ❤️ for newcomers to Canada.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Form handling
+        function handleFormSubmit(formId, successId) {
+            const form = document.getElementById(formId);
+            const success = document.getElementById(successId);
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                
+                // Store email in localStorage for now (we'll connect to Supabase later)
+                const emails = JSON.parse(localStorage.getItem('landedai_waitlist') || '[]');
+                if (!emails.includes(email)) {
+                    emails.push(email);
+                    localStorage.setItem('landedai_waitlist', JSON.stringify(emails));
+                }
+                
+                // Show success message
+                this.style.display = 'none';
+                success.classList.add('show');
+                
+                // Log for debugging
+                console.log('Email captured:', email);
+                console.log('Total emails:', emails.length);
+            });
+        }
+        
+        handleFormSubmit('heroForm', 'heroSuccess');
+        handleFormSubmit('ctaForm', 'ctaSuccess');
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
