@@ -808,30 +808,56 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://umhwkjbcamdksyixwpbr.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_CVtozu3NQZLoBjB2NBwiHQ_lHzfgHbY';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // Form handling
         function handleFormSubmit(formId, successId) {
             const form = document.getElementById(formId);
             const success = document.getElementById(successId);
             
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const email = this.querySelector('input[type="email"]').value;
+                const emailInput = this.querySelector('input[type="email"]');
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const email = emailInput.value;
                 
-                // Store email in localStorage for now (we'll connect to Supabase later)
-                const emails = JSON.parse(localStorage.getItem('landedai_waitlist') || '[]');
-                if (!emails.includes(email)) {
-                    emails.push(email);
-                    localStorage.setItem('landedai_waitlist', JSON.stringify(emails));
+                // Disable button while submitting
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Joining...';
+                
+                try {
+                    // Insert email into Supabase
+                    const { data, error } = await supabase
+                        .from('waitlist')
+                        .insert([{ email: email }]);
+                    
+                    if (error) {
+                        if (error.code === '23505') {
+                            // Duplicate email
+                            alert('This email is already on the waitlist!');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Join Waitlist';
+                        } else {
+                            throw error;
+                        }
+                    } else {
+                        // Success - show success message
+                        this.style.display = 'none';
+                        success.classList.add('show');
+                        console.log('Email saved to Supabase:', email);
+                    }
+                } catch (err) {
+                    console.error('Error saving email:', err);
+                    alert('Something went wrong. Please try again!');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join Waitlist';
                 }
-                
-                // Show success message
-                this.style.display = 'none';
-                success.classList.add('show');
-                
-                // Log for debugging
-                console.log('Email captured:', email);
-                console.log('Total emails:', emails.length);
             });
         }
         
